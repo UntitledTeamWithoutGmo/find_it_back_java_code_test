@@ -1,0 +1,37 @@
+services:
+  backend:
+    image: find_it_back_code
+    build:
+      context: .
+
+
+
+    #      kafka:
+    #        condition: service_healthy\
+
+    #      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "5000:5000"
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    restart: always
+    ports:
+      - "9092:9092"   # Основной порт для клиентов
+      - "9093:9093"   # Контроллер Kafka (для KRaft)
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes  # Включаем режим KRaft
+      - KAFKA_CFG_NODE_ID=1  # Идентификатор узла
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker  # Роли узла
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093  # Порты для брокера и контроллера
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092  # Рекламируемый адрес брокера
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093  # Кворум контроллеров
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER  # Слушатель для контроллеров
+      - ALLOW_PLAINTEXT_LISTENER=yes  # Разрешить простое соединение
+      - KAFKA_CFG_LOG_DIRS=/bitnami/kafka/data  # Директория для хранения данных
+
+    volumes:
+      - kafka_data:/bitnami/kafka/data  # Монтируем том для данных
+
+volumes:
+  kafka_data:
