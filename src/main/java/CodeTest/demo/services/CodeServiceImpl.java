@@ -27,7 +27,7 @@ public class CodeServiceImpl implements CodeService{
         int response = (int)method.invoke(null,5,3);
 
         if (response==8){
-            kafkaProducer.sendMessage("Hello pidoras");
+            kafkaProducer.sendMessage("pidor");
         }
 
 
