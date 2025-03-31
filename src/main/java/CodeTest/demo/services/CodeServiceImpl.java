@@ -4,6 +4,7 @@ import CodeTest.demo.kafka.KafkaProducer;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -15,7 +16,7 @@ public class CodeServiceImpl implements CodeService{
     @Autowired
     private KafkaProducer kafkaProducer;
     @Override
-    public String responseCode(String code) throws CompileException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<String> responseCode(String code) throws CompileException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SimpleCompiler simpleCompiler = new SimpleCompiler();
 
         String responseEnd = "";
@@ -28,6 +29,7 @@ public class CodeServiceImpl implements CodeService{
 
         if (response==8){
             kafkaProducer.sendMessage("pidor");
+            return ResponseEntity.status(200).body(""+response);
         }
 
 
@@ -35,6 +37,6 @@ public class CodeServiceImpl implements CodeService{
 
 
 
-        return ""+response;
+        return ResponseEntity.status(300).body("Bad");
     }
 }
