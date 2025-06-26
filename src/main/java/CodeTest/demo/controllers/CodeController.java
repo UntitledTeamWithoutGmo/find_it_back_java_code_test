@@ -1,5 +1,6 @@
 package CodeTest.demo.controllers;
 
+import CodeTest.demo.models.Answer;
 import CodeTest.demo.models.Code;
 import CodeTest.demo.services.CodeService;
 import org.codehaus.commons.compiler.CompileException;
@@ -18,7 +19,7 @@ public class CodeController {
     private CodeService codeService;
 
     @PostMapping("/java")
-    private ResponseEntity<String> testCodeJava(@RequestBody Code code) throws CompileException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    private ResponseEntity<Answer> testCodeJava(@RequestBody Code code) throws CompileException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         return codeService.responseCode(code.getCode());
     }
 }

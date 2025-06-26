@@ -1,6 +1,7 @@
 package CodeTest.demo.services;
 
 import CodeTest.demo.kafka.KafkaProducer;
+import CodeTest.demo.models.Answer;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,11 @@ public class CodeServiceImpl implements CodeService{
     @Autowired
     private KafkaProducer kafkaProducer;
     @Override
-    public ResponseEntity<String> responseCode(String code) throws CompileException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<Answer> responseCode(String code) throws CompileException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SimpleCompiler simpleCompiler = new SimpleCompiler();
-
+        Answer answer = new Answer();
         String responseEnd = "";
-
+        answer.setCorrect(false);
         simpleCompiler.cook(code);
         Class<?> testClass = simpleCompiler.getClassLoader().loadClass("TestClass");
 
@@ -29,7 +30,8 @@ public class CodeServiceImpl implements CodeService{
 
         if (response==8){
             kafkaProducer.sendMessage("pidor");
-            return ResponseEntity.status(200).body(""+response);
+            answer.setCorrect(true);
+            return ResponseEntity.status(200).body(answer);
         }
 
 
@@ -37,6 +39,6 @@ public class CodeServiceImpl implements CodeService{
 
 
 
-        return ResponseEntity.status(300).body("Bad");
+        return ResponseEntity.status(300).body(answer);
     }
 }
