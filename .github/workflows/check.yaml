@@ -15,6 +15,18 @@ jobs:
          kafka port: 9092
          zookeeper port: 2181
          auto create topic: "true"
+     - name: Wait for Kafka to be ready
+       run: |
+           echo "Waiting for Kafka..."
+           for i in {1..10}; do
+             if nc -z localhost 9092; then
+               echo "Kafka is up!"
+               exit 0
+             fi
+             sleep 3
+           done
+           echo "Kafka failed to start"
+           exit 1
 
      - name: Setup jdk
        uses: actions/setup-java@v4
