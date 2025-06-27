@@ -39,6 +39,18 @@ jobs:
        run: java -version
      - name: Unit tests
        run:  mvn -B test --file pom.xml
+     - name: Login to Docker Hub
+       uses: docker/login-action@v3
+       with:
+         username: dnr0vec
+         password: 57Kk7788$
+     - name: Build and push
+       uses: docker/build-push-action@v6
+       with:
+         context: .
+         push: true
+         tags: dnr0vec/find_it_back_code:latest
+
 
 
 
