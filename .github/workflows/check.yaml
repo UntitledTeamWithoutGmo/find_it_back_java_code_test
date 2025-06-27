@@ -7,6 +7,15 @@ jobs:
      - name: Checkout
        uses: actions/checkout@v4
 
+     - name: Start Kafka
+       uses: 280780363/kafka-action@v1.0
+       with:
+         kafka version: "latest"
+         zookeeper version: "latest"
+         kafka port: 9092
+         zookeeper port: 2181
+         auto create topic: "true"
+
      - name: Setup jdk
        uses: actions/setup-java@v4
        with:
